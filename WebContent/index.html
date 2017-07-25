@@ -1,0 +1,52 @@
+<html>
+   <head>
+      <title>File Uploading Form</title>
+   </head>
+   
+   <body>
+      <h3>File Upload:</h3>
+      Select a file to upload: <br />
+      <form action = "model" method = "post" enctype = "multipart/form-data">
+         <input type = "file" name = "file" size = "50" />
+         <br />
+         parser name: <input type = "text" name = "parserName" size = "50" value="archimate3"/>
+         <br />
+         project name: <input type = "text" name = "projectName" size = "50" />
+         <br />
+         branch name: <input type = "text" name = "branchName" size = "50" />
+         <br />
+         userid: <input type = "text" name = "userid" size = "50" />
+         <br />
+         comment: <input type = "text" name = "comment" size = "50" />
+         <br />
+         content type: <input type = "radio" name = "contentType" value="text/xml" checked />text/xml<br/ >
+         <input type = "radio" name = "contentType" value="application/json">application/json<br />
+         <input type = "submit" value = "Upload File" />
+      </form>
+      <h3>Monitor file upload:</h3>
+      <form action = "model" method = "get">
+         taskId: <input type = "text" name = "taskId" size = "50" />
+         <br />
+         <input type = "submit" value = "get status" />
+      </form>
+      <hr>
+      <h3>File download:</h3>
+      Select a file to download: <br />
+      <form action = "model" method = "get">
+         parser name: <input type = "text" name = "parserName" size = "50" value="archimate3"/>
+         <br />
+         project name: <input type = "text" name = "projectName" size = "50" />
+         <br />
+         branch name: <input type = "text" name = "branchName" size = "50" />
+         <br />
+         userid: <input type = "text" name = "userid" size = "50" />
+         <br />
+         (version): <input type = "text" name = "version" size = "50" />
+         <br />
+         content type: <input type = "radio" name = "contentType" value="text/xml" checked />text/xml<br/ >
+         <input type = "radio" name = "contentType" value="application/json">application/json<br />
+         <input type = "submit" value = "Download File" />
+      </form>
+      
+   </body>
+</html>
