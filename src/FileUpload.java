@@ -82,7 +82,10 @@ public class FileUpload extends HttpServlet {
 
 		// Check that we have a file upload request
 		isMultipart = ServletFileUpload.isMultipartContent(request);
-		response.setContentType("text/html");
+		//response.setContentType("text/html");
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		
 		java.io.PrintWriter out = response.getWriter( );
 		String comment = "no comment";
 		String intFileName = null;
@@ -93,15 +96,16 @@ public class FileUpload extends HttpServlet {
 		String contentType = null;
 
 		if( !isMultipart ) {
-			out.println("<html>");
-			out.println("<head>");
-			out.println("<title>Servlet upload</title>");  
-			out.println("</head>");
-			out.println("<body>");
-			out.println("<p>No file uploaded</p>"); 
-			out.println("</body>");
-			out.println("</html>");
-			return;
+//			out.println("<html>");
+//			out.println("<head>");
+//			out.println("<title>Servlet upload</title>");  
+//			out.println("</head>");
+//			out.println("<body>");
+//			out.println("<p>No file uploaded</p>"); 
+//			out.println("</body>");
+//			out.println("</html>");
+//			return;
+			throw new ServletException("request is not a multipart request; no file uploaded");
 		}
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -125,11 +129,11 @@ public class FileUpload extends HttpServlet {
 			// Process the uploaded file items
 			Iterator i = fileItems.iterator();
 
-			out.println("<html>");
-			out.println("<head>");
-			out.println("<title>Servlet upload</title>");  
-			out.println("</head>");
-			out.println("<body>");
+//			out.println("<html>");
+//			out.println("<head>");
+//			out.println("<title>Servlet upload</title>");  
+//			out.println("</head>");
+//			out.println("<body>");
 			String uuid = UUID.randomUUID().toString();
 
 			while ( i.hasNext () ) {
@@ -154,7 +158,7 @@ public class FileUpload extends HttpServlet {
 					file = new File(intFileName);
 
 					fi.write( file ) ;
-					out.println("Uploaded Filename: " + fileName + "<br>");
+					//out.println("Uploaded Filename: " + fileName + "<br>");
 				} else {
 					String name = fi.getFieldName();//text1
 					String value = fi.getString();
@@ -181,10 +185,18 @@ public class FileUpload extends HttpServlet {
 						parserName, projectName, branchName, userid);
 				//pool.execute(task);
 				executor.execute(task);
-				out.println("taskId: "+uuid);
+				out.println("{\"parserName\": \""+parserName+"\", ");
+				out.println("\"projectName\": \""+projectName+"\", ");
+				out.println("\"branchName\": \""+branchName+"\", ");
+				out.println("\"contentType\": \""+contentType+"\", ");
+				out.println("\"comment\": \""+comment+"\", ");
+				out.println("\"file_list\": null, ");
+				out.println("\"version\": \""+uuid+"\", ");
+				out.println("\"userid\": \""+userid+"\", ");
+				out.println("\"taskId\": \""+uuid+"\"}");
+				out.flush();
+				out.close();
 			}
-			out.println("</body>");
-			out.println("</html>");
 		} catch(Exception ex) {
 			LOGGER.severe(ex.getMessage());
 		}
@@ -233,6 +245,11 @@ public class FileUpload extends HttpServlet {
 		
 		if(taskId !=null && !taskId.isEmpty()){
 			org.iea.pool.TaskStatus taskStatus = pf.getTaskStatus(taskId);
+			if(taskStatus == null) {
+				taskStatus = new TaskStatus();
+				taskStatus.setMsg("invalid taskId "+taskId);
+				taskStatus.setState(TaskState.FAILURE);
+			}
 			String statusMsg = taskStatus.getJsonObjectString();
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();

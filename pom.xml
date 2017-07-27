@@ -15,13 +15,36 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.0.0</version>
-        <configuration>
-          <warSourceDirectory>WebContent</warSourceDirectory>
-        </configuration>
-      </plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<warSourceDirectory>WebContent</warSourceDirectory>
+					<packagingExcludes>
+						WEB-INF/lib/*maven*.jar,
+						WEB-INF/lib/*servlet*.jar,
+						WEB-INF/lib/*junit*.jar
+					</packagingExcludes>
+					<archive>
+						<manifest>
+							<addClasspath>false</addClasspath>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<!-- path>/${project.build.finalName}</path -->
+					<path>/${project.artifactId}</path>
+					<update>true</update>
+					<url>http://192.168.2.10:8080/manager/text</url>
+					<username>iea</username>
+					<password>iea</password>
+				</configuration>
+			</plugin>
     </plugins>
   </build>
   <dependencies>
